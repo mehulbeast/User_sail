@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Dashboard - SAIL Gate Pass System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+            .header {
+            background: linear-gradient(135deg, #d4d5d8 0%, #0a26b7 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(76, 111, 245, 0.2);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1re;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .company-info h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .company-info p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .nav-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .welcome-text {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .debug-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .debug-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .count-badge {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #95a5a6;
+            font-size: 1.1rem;
+            padding: 2rem;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .application-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .application-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .app-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-forwarded {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .app-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .security-comments {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .comments-header {
+            color: #3498db;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .comments-text {
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .issue-notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
+            animation: slideIn 0.5s ease;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .issue-notification:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(231, 76, 60, 0.4);
+        }
+
+        .notification-badge {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.2rem;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .screen-share-notice {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .share-text {
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+
+        .stop-sharing-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .stop-sharing-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .hide-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .approve-btn {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .approve-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .reject-btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .reject-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .forward-btn {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .forward-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav-section {
+                justify-content: center;
+            }
+            
+            .app-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+             <div class="sail-logo">
+                    <img src="SAIL_LOGO_NEW.png" alt="SAIL Logo" style="width: 100px;">
+                </div>
+                <h1>STEEL AUTHORITY OF INDIA LIMITED</h1>
+                <p>Gate Pass - Entry/Exit Control System</p>
+            </div>
+        </div>
+        <div class="nav-section">
+            <span class="welcome-text">Welcome, Security Admin</span>
+            <button class="nav-btn debug-btn" onclick="goToDebug()">Debug View</button>
+            <button class="nav-btn logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <h1 class="dashboard-title">Security Dashboard</h1>
+        
+        <div class="dashboard-grid">
+            <!-- Pending Applications -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Pending Applications</h2>
+                    <span class="count-badge" id="pendingCount">0</span>
+                </div>
+                <div id="pendingApplications">
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <p>No pending applications</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processed Applications -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Processed Applications</h2>
+                    <span class="count-badge" id="processedCount">1</span>
+                </div>
+                <div id="processedApplications">
+                    <div class="application-item">
+                        <div class="app-header">
+                            <h3 class="app-title">Test#1 (#test1)</h3>
+                            <span class="status-badge status-forwarded">Forwarded</span>
+                        </div>
+                        <div class="app-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Purpose</span>
+                                <span class="detail-value">Meeting with HR team</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Department</span>
+                                <span class="detail-value">HR</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Date</span>
+                                <span class="detail-value">2024-01-15</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Processed</span>
+                                <span class="detail-value">06/06/2025, 01:12:37</span>
+                            </div>
+                        </div>
+                        <div class="security-comments">
+                            <div class="comments-header">Security Comments:</div>
+                            <div class="comments-text">Test forwarded application</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Issue Notification -->
+    <div class="issue-notification" id="issueNotification">
+        <span class="notification-badge">!</span>
+        <span>1 Issue</span>
+        <button class="close-btn" onclick="closeNotification()">&times;</button>
+    </div>
+
+    <!-- Screen Share Notice -->
+    <div class="screen-share-notice" id="screenShareNotice">
+        <span class="share-text">meet.google.com is sharing your screen.</span>
+        <button class="stop-sharing-btn">Stop sharing</button>
+        <button class="hide-btn">Hide</button>
+    </div>
+
+    <script>
+        // Sample applications data
+        let applications = [
+            {
+                id: 'test1',
+                title: 'Test#1',
+                purpose: 'Meeting with HR team',
+                department: 'HR',
+                date: '2024-01-15',
+                status: 'forwarded',
+                processedDate: '06/06/2025, 01:12:37',
+                comments: 'Test forwarded application'
+            }
+        ];
+
+        let pendingApplications = [];
+
+        // Function to render applications
+        function renderApplications() {
+            renderPendingApplications();
+            renderProcessedApplications();
+            updateCounts();
+        }
+
+        function renderPendingApplications() {
+            const container = document.getElementById('pendingApplications');
+            
+            if (pendingApplications.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <p>No pending applications</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = pendingApplications.map(app => `
+                <div class="application-item">
+                    <div class="app-header">
+                        <h3 class="app-title">${app.title} (#${app.id})</h3>
+                        <span class="status-badge status-pending">Pending</span>
+                    </div>
+                    <div class="app-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Purpose</span>
+                            <span class="detail-value">${app.purpose}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Department</span>
+                            <span class="detail-value">${app.department}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Date</span>
+                            <span class="detail-value">${app.date}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Submitted</span>
+                            <span class="detail-value">${new Date().toLocaleString()}</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn approve-btn" onclick="approveApplication('${app.id}')">Approve</button>
+                        <button class="action-btn reject-btn" onclick="rejectApplication('${app.id}')">Reject</button>
+                        <button class="action-btn forward-btn" onclick="forwardApplication('${app.id}')">Forward</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderProcessedApplications() {
+            const container = document.getElementById('processedApplications');
+            const processedApps = applications.filter(app => app.status !== 'pending');
+            
+            if (processedApps.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">✅</div>
+                        <p>No processed applications</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = processedApps.map(app => `
+                <div class="application-item">
+                    <div class="app-header">
+                        <h3 class="app-title">${app.title} (#${app.id})</h3>
+                        <span class="status-badge status-${app.status}">${app.status.charAt(0).toUpperCase() + app.status.slice(1)}</span>
+                    </div>
+                    <div class="app-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Purpose</span>
+                            <span class="detail-value">${app.purpose}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Department</span>
+                            <span class="detail-value">${app.department}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Date</span>
+                            <span class="detail-value">${app.date}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Processed</span>
+                            <span class="detail-value">${app.processedDate}</span>
+                        </div>
+                    </div>
+                    ${app.comments ? `
+                        <div class="security-comments">
+                            <div class="comments-header">Security Comments:</div>
+                            <div class="comments-text">${app.comments}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function updateCounts() {
+            document.getElementById('pendingCount').textContent = pendingApplications.length;
+            document.getElementById('processedCount').textContent = applications.filter(app => app.status !== 'pending').length;
+        }
+
+        // Action functions
+        function approveApplication(id) {
+            const appIndex = pendingApplications.findIndex(app => app.id === id);
+            if (appIndex !== -1) {
+                const app = pendingApplications[appIndex];
+                app.status = 'approved';
+                app.processedDate = new Date().toLocaleString();
+                app.comments = 'Application approved by security';
+                
+                applications.push(app);
+                pendingApplications.splice(appIndex, 1);
+                renderApplications();
+                
+                showToast('Application approved successfully!', 'success');
+            }
+        }
+
+        function rejectApplication(id) {
+            const appIndex = pendingApplications.findIndex(app => app.id === id);
+            if (appIndex !== -1) {
+                const app = pendingApplications[appIndex];
+                app.status = 'rejected';
+                app.processedDate = new Date().toLocaleString();
+                app.comments = 'Application rejected by security';
+                
+                applications.push(app);
+                pendingApplications.splice(appIndex, 1);
+                renderApplications();
+                
+                showToast('Application rejected!', 'error');
+            }
+        }
+
+        function forwardApplication(id) {
+            const appIndex = pendingApplications.findIndex(app => app.id === id);
+            if (appIndex !== -1) {
+                const app = pendingApplications[appIndex];
+                app.status = 'forwarded';
+                app.processedDate = new Date().toLocaleString();
+                app.comments = 'Application forwarded to department head';
+                
+                applications.push(app);
+                pendingApplications.splice(appIndex, 1);
+                renderApplications();
+                
+                showToast('Application forwarded successfully!', 'info');
+            }
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 2rem;
+                right: 2rem;
+                background: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // Navigation functions
+        function goToDebug() {
+            // Simulate navigation to debug page
+            showToast('Navigating to Debug View...', 'info');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                showToast('Logging out...', 'info');
+                setTimeout(() => {
+                    window.location.href = '#login';
+                }, 1000);
+            }
+        }
+
+        function closeNotification() {
+            document.getElementById('issueNotification').style.display = 'none';
+        }
+
+        // Simulate receiving new applications
+        function simulateNewApplication() {
+            const newApp = {
+                id: 'app' + Date.now(),
+                title: 'New Application',
+                purpose: 'Visitor meeting',
+                department: 'Engineering',
+                date: new Date().toISOString().split('T')[0],
+                status: 'pending'
+            };
+            
+            pendingApplications.push(newApp);
+            renderApplications();
+            showToast('New application received!', 'info');
+        }
+
+        // Initialize
+        renderApplications();
+
+        // Add some CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            .status-pending {
+                background: linear-gradient(45deg, #f39c12, #e67e22);
+                color: white;
+            }
+            
+            .status-approved {
+                background: linear-gradient(45deg, #27ae60, #2ecc71);
+                color: white;
+            }
+            
+            .status-rejected {
+                background: linear-gradient(45deg, #e74c3c, #c0392b);
+                color: white;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add demo button for testing
+        setTimeout(() => {
+            const demoBtn = document.createElement('button');
+            demoBtn.textContent = '+ Add Demo Application';
+            demoBtn.style.cssText = `
+                position: fixed;
+                top: 2rem;
+                right: 2rem;
+                background: linear-gradient(45deg, #9b59b6, #8e44ad);
+                color: white;
+                border: none;
+                padding: 0.8rem 1.2rem;
+                border-radius: 10px;
+                cursor: pointer;
+                font-weight: 600;
+                z-index: 100;
+                transition: all 0.3s ease;
+            `;
+            demoBtn.onmouseover = () => demoBtn.style.transform = 'translateY(-2px)';
+            demoBtn.onmouseout = () => demoBtn.style.transform = 'translateY(0)';
+            demoBtn.onclick = simulateNewApplication;
+            document.body.appendChild(demoBtn);
+        }, 2000);
+    </script>
+</body>
+</html>

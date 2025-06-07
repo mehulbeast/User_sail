@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - All Applications | SAIL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #d4d5d8 0%, #0a26b7 100%);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .back-btn, .refresh-btn {
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #4a5568;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .refresh-btn {
+            background: #2d3748;
+            color: white;
+            border-color: #2d3748;
+        }
+
+        .back-btn:hover {
+            background: #f7fafc;
+            border-color: #4c6ef5;
+            color: #4c6ef5;
+        }
+
+        .refresh-btn:hover {
+            background: #1a202c;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card.total {
+            border-left-color: #4c6ef5;
+        }
+
+        .stat-card.pending {
+            border-left-color: #f59e0b;
+        }
+
+        .stat-card.forwarded {
+            border-left-color: #3b82f6;
+        }
+
+        .stat-card.approved {
+            border-left-color: #10b981;
+        }
+
+        .stat-card.rejected {
+            border-left-color: #ef4444;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-number.pending {
+            color: #f59e0b;
+        }
+
+        .stat-number.forwarded {
+            color: #3b82f6;
+        }
+
+        .stat-number.approved {
+            color: #10b981;
+        }
+
+        .stat-number.rejected {
+            color: #ef4444;
+        }
+
+        .stat-subtitle {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        /* Department Section */
+        .department-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+        }
+
+        .department-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .department-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .department-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .application-count {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .application-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .application-id {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: lowercase;
+        }
+
+        .status-badge.forwarded {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-badge.approved {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-badge.rejected {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Detailed Applications */
+        .detailed-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .detailed-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #2d3748;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .applications-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .applications-table th,
+        .applications-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .applications-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .applications-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn {
+            background: #4c6ef5;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-left: 4px solid #4c6ef5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .applications-table {
+                font-size: 0.9rem;
+            }
+            
+            .applications-table th,
+            .applications-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .department-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .applications-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="sail-logo">
+                    <img src="SAIL_LOGO_NEW.png" alt="SAIL Logo" style="width: 100px; ">
+                </div>
+            <h1 class="page-title">Debug - All Applications</h1>
+            <div class="header-actions">
+                <a href="#" class="back-btn" onclick="goBackToDashboard()">Back to Login</a>
+                <button class="refresh-btn" onclick="refreshData()">Refresh</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-title">Total Applications</div>
+                <div class="stat-number">1</div>
+                <div class="stat-subtitle">Raw count: 1</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-title">Pending</div>
+                <div class="stat-number pending">0</div>
+            </div>
+            <div class="stat-card forwarded">
+                <div class="stat-title">Forwarded</div>
+                <div class="stat-number forwarded">1</div>
+            </div>
+            <div class="stat-card approved">
+                <div class="stat-title">Approved</div>
+                <div class="stat-number approved">0</div>
+            </div>
+            <div class="stat-card rejected">
+                <div class="stat-title">Rejected</div>
+                <div class="stat-number rejected">0</div>
+            </div>
+        </div>
+
+        <!-- Applications by Department -->
+        <section class="department-section">
+            <h2 class="section-title">Applications by Department</h2>
+            
+            <div class="department-card">
+                <div class="department-header">
+                    <h3 class="department-name">HR Department</h3>
+                    <span class="application-count">1 applications</span>
+                </div>
+                <div class="application-item">
+                    <span class="application-id">#test1</span>
+                    <span class="status-badge forwarded">forwarded</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Applications View -->
+        <section class="detailed-section">
+            <div class="detailed-header">
+                <div class="user-avatar">N</div>
+                <h2 class="section-title" style="margin: 0;">All Applications (Detailed View)</h2>
+            </div>
+
+            <div id="applicationsContainer">
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>Application ID</th>
+                            <th>Department</th>
+                            <th>Purpose</th>
+                            <th>Visit Date</th>
+                            <th>Status</th>
+                            <th>Submitted On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicationsTableBody">
+                        <tr>
+                            <td><strong>#test1</strong></td>
+                            <td>HR Department</td>
+                            <td>Official Meeting</td>
+                            <td>2024-06-10</td>
+                            <td><span class="status-badge forwarded">forwarded</span></td>
+                            <td>2024-06-05</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn view-btn" onclick="viewApplication('test1')">View</button>
+                                    <button class="action-btn edit-btn" onclick="editApplication('test1')">Edit</button>
+                                    <button class="action-btn delete-btn" onclick="deleteApplication('test1')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Sample data - replace with actual API calls
+        let applications = [
+            {
+                id: 'test1',
+                department: 'HR Department',
+                purpose: 'Official Meeting',
+                visitDate: '2024-06-10',
+                status: 'forwarded',
+                submittedOn: '2024-06-05',
+                applicantName: 'Test User',
+                visitTime: '10:00 AM',
+                duration: 'Half Day',
+                vehicleNumber: 'JH01AB1234'
+            }
+        ];
+
+        // Go back to dashboard
+        function goBackToDashboard() {
+            if (confirm('Do you want to go back to the main dashboard?')) {
+                // In a real application, you would navigate to the dashboard page
+                // window.location.href = 'dashboard.html';
+                alert('Redirecting to dashboard...');
+            }
+        }
+
+        // Refresh data
+        function refreshData() {
+            showLoading();
+            
+            // Simulate API call
+            setTimeout(() => {
+                loadApplications();
+                updateStats();
+                hideLoading();
+                showNotification('Data refreshed successfully!', 'success');
+            }, 1500);
+        }
+
+        // Show loading state
+        function showLoading() {
+            const container = document.getElementById('applicationsContainer');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading applications...</p>
+                </div>
+            `;
+        }
+
+        // Hide loading and show content
+        function hideLoading() {
+            loadApplications();
+        }
+
+        // Load applications into table
+        function loadApplications() {
+            const tableBody = document.getElementById('applicationsTableBody');
+            
+            if (applications.length === 0) {
+                document.getElementById('applicationsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <h3>No Applications Found</h3>
+                        <p>You haven't submitted any applications yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const tableHtml = `
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>Application ID</th>
+                            <th>Department</th>
+                            <th>Purpose</th>
+                            <th>Visit Date</th>
+                            <th>Status</th>
+                            <th>Submitted On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${applications.map(app => `
+                            <tr>
+                                <td><strong>#${app.id}</strong></td>
+                                <td>${app.department}</td>
+                                <td>${app.purpose}</td>
+                                <td>${app.visitDate}</td>
+                                <td><span class="status-badge ${app.status}">${app.status}</span></td>
+                                <td>${app.submittedOn}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view-btn" onclick="viewApplication('${app.id}')">View</button>
+                                        <button class="action-btn edit-btn" onclick="editApplication('${app.id}')">Edit</button>
+                                        <button class="action-btn delete-btn" onclick="deleteApplication('${app.id}')">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('applicationsContainer').innerHTML = tableHtml;
+        }
+
+        // Update statistics
+        function updateStats() {
+            const stats = {
+                total: applications.length,
+                pending: applications.filter(app => app.status === 'pending').length,
+                forwarded: applications.filter(app => app.status === 'forwarded').length,
+                approved: applications.filter(app => app.status === 'approved').length,
+                rejected: applications.filter(app => app.status === 'rejected').length
+            };
+
+            // Update stat cards (you can implement this to update the numbers dynamically)
+            console.log('Updated stats:', stats);
+        }
+
+        // View application details
+        function viewApplication(id) {
+            const app = applications.find(a => a.id === id);
+            if (app) {
+                alert(`Application Details:\n\nID: #${app.id}\nDepartment: ${app.department}\nPurpose: ${app.purpose}\nVisit Date: ${app.visitDate}\nVisit Time: ${app.visitTime}\nDuration: ${app.duration}\nVehicle: ${app.vehicleNumber || 'N/A'}\nStatus: ${app.status}\nSubmitted: ${app.submittedOn}`);
+            }
+        }
+
+        // Edit application
+        function editApplication(id) {
+            const app = applications.find(a => a.id === id);
+            if (app && app.status === 'pending') {
+                showNotification('Redirecting to edit form...', 'info');
+                // In real app: window.location.href = `edit-application.html?id=${id}`;
+            } else {
+                showNotification('Cannot edit application in current status', 'error');
+            }
+        }
+
+        // Delete application
+        function deleteApplication(id) {
+            if (confirm('Are you sure you want to delete this application?')) {
+                applications = applications.filter(app => app.id !== id);
+                loadApplications();
+                updateStats();
+                showNotification('Application deleted successfully!', 'success');
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApplications();
+            showNotification('Applications loaded successfully!', 'success');
+        });
+
+        // Add sample applications for demonstration
+        function addSampleApplications() {
+            const sampleApps = [
+                {
+                    id: 'APP001',
+                    department: 'IT Department',
+                    purpose: 'System Maintenance',
+                    visitDate: '2024-06-12',
+                    status: 'pending',
+                    submittedOn: '2024-06-06',
+                    applicantName: 'John Doe',
+                    visitTime: '2:00 PM',
+                    duration: 'Full Day',
+                    vehicleNumber: ''
+                },
+                {
+                    id: 'APP002',
+                    department: 'Finance',
+                    purpose: 'Audit Review',
+                    visitDate: '2024-06-15',
+                    status: 'approved',
+                    submittedOn: '2024-06-04',
+                    applicantName: 'Jane Smith',
+                    visitTime: '9:00 AM',
+                    duration: '2 Hours',
+                    vehicleNumber: 'JH02CD5678'
+                }
+            ];
+            
+            applications.push(...sampleApps);
+            loadApplications();
+            updateStats();
+            showNotification('Sample applications added!', 'success');
+        }
+
+        // Expose function to add sample data (for demo purposes)
+        window.addSampleData = addSampleApplications;
+    </script>
+</body>
+</html>
