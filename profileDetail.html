@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steel Authority of India Limited - User Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* Header */
+        .header {
+            background-color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #1e3a8a;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .cert-logo {
+            width: 40px;
+            height: 40px;
+            background-color: #dc2626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .header-text {
+            max-width: 500px;
+        }
+
+        .header-text h1 {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .skip-link {
+            text-decoration: underline;
+            color: #1e3a8a;
+            font-size: 14px;
+        }
+
+        .language-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .language-links a {
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .language-links .active {
+            color: #3b82f6;
+        }
+
+        .language-links .inactive {
+            color: #666;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            background-color: #1e3a8a;
+            padding: 10px 20px;
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: normal;
+            letter-spacing: 8px;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        /* Details Container */
+        .details-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .details-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details-header h2 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .profile-id {
+            font-size: 14px;
+            color: #666;
+            background-color: #e5e7eb;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        /* Profile Photo */
+        .profile-photo-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #1e3a8a;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #9ca3af;
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111827;
+            word-wrap: break-word;
+        }
+
+        .detail-value.empty {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #1e3a8a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e40af;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 2px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        .btn-danger {
+            background-color: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e5e7eb;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-left {
+                flex-direction: column;
+            }
+
+            .main-title {
+                font-size: 20px;
+                letter-spacing: 4px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .details-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 200px;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo-container">
+               <div class="sail-logo">
+                    <img src="SAIL_LOGO_NEW.png" alt="SAIL Logo" style="width: 100px; ">
+                </div>
+            <div class="header-text">
+                <h1>This is the official website of Steel Authority of India Limited (SAIL),</h1>
+                <p>a Public Sector Undertaking under the Ministry of Steel, Government of India</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="#main" class="skip-link">Skip to main content</a>
+            <div class="language-links">
+                <a href="#" class="active">English</a>
+                <a href="#" class="inactive">Hindi</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="search" style="padding-left: 35px;">
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main" class="main-container">
+        <h1 class="main-title">STEEL AUTHORITY OF INDIA LIMITED</h1>
+
+        <div class="details-container">
+            <div class="details-header">
+                <h2>Visitor Profile Details</h2>
+                <div class="profile-id">ID: VP2024001</div>
+            </div>
+
+            <!-- Profile Photo -->
+            <div class="profile-photo-section">
+                <div class="profile-photo">
+                    👤
+                </div>
+            </div>
+
+            <!-- Details Grid -->
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Visitor's Name</div>
+                    <div class="detail-value">Rajesh Kumar Singh</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Date of Birth</div>
+                    <div class="detail-value">15th March, 1985</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Email ID</div>
+                    <div class="detail-value">rajesh.kumar@email.com</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Gender</div>
+                    <div class="detail-value">Male</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Mobile Number</div>
+                    <div class="detail-value">+91 9876543210</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Unique ID Proof</div>
+                    <div class="detail-value">Aadhar Card</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Unique ID Proof Number</div>
+                    <div class="detail-value">XXXX XXXX 5678</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Company Name</div>
+                    <div class="detail-value">Tech Solutions Pvt. Ltd.</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Designation</div>
+                    <div class="detail-value">Senior Software Engineer</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Profile Status</div>
+                    <div class="detail-value">
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Registration Date</div>
+                    <div class="detail-value">9th June, 2025</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Last Updated</div>
+                    <div class="detail-value">9th June, 2025</div>
+                </div>
+            </div>
+
+            <!-- Address Section -->
+            <div class="detail-item" style="grid-column: 1 / -1;">
+                <div class="detail-label">Address for Communication</div>
+                <div class="detail-value">
+                    Flat No. 204, Sunrise Apartments,<br>
+                    Sector 15, Rohini,<br>
+                    New Delhi - 110085
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="editProfile()">Edit Profile</button>
+                <button class="btn btn-secondary" onclick="downloadProfile()">Download Details</button>
+                <button class="btn btn-secondary" onclick="printProfile()">Print Profile</button>
+                <button class="btn btn-danger" onclick="deactivateProfile()">Deactivate Profile</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Support</h3>
+                <p>ISPAT BHAWAN, H-Block, Shyamali Colony, Doranda, Ranchi, Jharkhand 834002</p>
+                <p>0651 241 1106</p>
+            </div>
+            <div class="footer-section">
+                <h3>Account</h3>
+                <a href="#">My Account</a>
+                <a href="#">Login</a>
+                <a href="#">Register</a>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Link</h3>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms Of Use</a>
+                <a href="#">FAQ</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Action button functions
+        function editProfile() {
+            alert('Redirecting to edit profile page...');
+            // In a real application, this would redirect to the edit form
+        }
+
+        function downloadProfile() {
+            alert('Downloading profile details as PDF...');
+            // In a real application, this would generate and download a PDF
+        }
+
+        function printProfile() {
+            window.print();
+        }
+
+        function deactivateProfile() {
+            if (confirm('Are you sure you want to deactivate this profile? This action cannot be undone.')) {
+                alert('Profile deactivated successfully.');
+                // In a real application, this would make an API call to deactivate
+            }
+        }
+
+        // Sample data update function (for demonstration)
+        function updateProfileData(data) {
+            // This function could be used to dynamically update the profile data
+            console.log('Profile data updated:', data);
+        }
+    </script>
+</body>
+</html>
